@@ -1,6 +1,6 @@
 import requests
 
-API_ROOT = "https://coronavirus-19-api.herokuapp.com"
+API_ROOT = "https://corona.lmao.ninja"
 
 
 def get_global_cases():
