@@ -36,7 +36,7 @@ def cbstats(update, context):
             except LookupError:
                 pass
             message += (
-                f"*{country}*\n"
+                f"*{stats['country']}*\n"
                 f"Confirmed: *{stats['cases']}* (+{stats['todayCases']})\n"
                 f"Current: *{stats['active']}*\n"
                 f"Deaths: *{stats['deaths']}* (+{stats['todayDeaths']})\n"
