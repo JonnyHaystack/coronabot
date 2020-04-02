@@ -1,13 +1,14 @@
+from datetime import datetime
 import logging
 from json.decoder import JSONDecodeError
 
 from flag import flagize
-from pycountry import countries
 from telegram import ParseMode
 from telegram.ext import CommandHandler
 from telegram.ext import Updater
 
 from coronabot import data
+from coronabot import formatting
 from coronabot import settings
 
 
@@ -18,32 +19,27 @@ def start(update, context):
 def cbstats(update, context):
     chat_id = update.message.chat_id
     message = ""
-    if len(context.args) == 0:
-        stats = data.get_global_cases()
-        message = (
-            "*Global stats*\n"
-            f"Confirmed: *{stats['cases']}*\n"
-            f"Deaths: *{stats['deaths']}*\n"
-            f"Recovered: *{stats['recovered']}*\n"
-        )
-    else:
-        country = " ".join(context.args)
-        try:
-            stats = data.get_country_cases(country)
-            try:
-                country_code = countries.lookup(country).alpha_2.lower()
-                message = flagize(f":{country_code}: ")
-            except LookupError:
-                pass
-            message += (
-                f"*{stats['country']}*\n"
-                f"Confirmed: *{stats['cases']}* (+{stats['todayCases']})\n"
-                f"Current: *{stats['active']}*\n"
-                f"Deaths: *{stats['deaths']}* (+{stats['todayDeaths']})\n"
-                f"Recovered: *{stats['recovered']}*\n"
+    try:
+        if len(context.args) == 0:
+            stats, updated = data.get_global_cases()
+            message = "*Global stats* "
+        else:
+            country = " ".join(context.args)
+            stats, country_info, updated = data.get_country_cases(country)
+            message = flagize(
+                f":{country_info['country_code']}: "
+                f"*{country_info['country_name']}* "
             )
-        except JSONDecodeError:
+        last_updated = datetime.fromtimestamp(int(updated) / 1000).strftime(
+            "%Y-%m-%d %H:%M"
+        )
+        message += f"({last_updated})\n"
+        message += formatting.format_stats(stats)
+    except JSONDecodeError:
+        if country is not None:
             message = f"{country} doesn't exist lmao"
+        else:
+            message = "Error: Could not look up stats"
     context.bot.send_message(
         chat_id=chat_id, text=message, parse_mode=ParseMode.MARKDOWN
     )
