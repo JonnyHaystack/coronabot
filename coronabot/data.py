@@ -21,7 +21,6 @@ def get_global_cases():
         "Recovered": response["recovered"],
         "Cases PMP": response["casesPerOneMillion"],
         "Deaths PMP": response["deathsPerOneMillion"],
-        "Affected countries": response["affectedCountries"],
     }
 
     return data, updated
