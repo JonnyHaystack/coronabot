@@ -9,10 +9,19 @@ def get_global_cases():
     updated = response["updated"]
 
     data = {
-        "Confirmed": response["cases"],
+        "Confirmed": {
+            "total": response["cases"],
+            "new": response["todayCases"],
+        },
         "Current": response["active"],
-        "Deaths": response["deaths"],
+        "Deaths": {
+            "total": response["deaths"],
+            "new": response["todayDeaths"],
+        },
         "Recovered": response["recovered"],
+        "Cases PMP": response["casesPerOneMillion"],
+        "Deaths PMP": response["deathsPerOneMillion"],
+        "Affected countries": response["affectedCountries"],
     }
 
     return data, updated
