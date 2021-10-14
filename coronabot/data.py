@@ -1,6 +1,6 @@
 import requests
 
-API_ROOT = "https://corona.lmao.ninja/v2"
+API_ROOT = "https://disease.sh/v3/covid-19"
 
 
 def get_global_cases():
