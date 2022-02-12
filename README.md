@@ -1,2 +1,2 @@
 # coronabot
-COVID-19 stats bot built using https://corona.lmao.ninja
+COVID-19 stats bot for Telegram built using https://corona.lmao.ninja
